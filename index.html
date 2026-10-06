@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en" id="top">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MathDash — Adaptive Math Drills for Kids | Free Timed Math Facts Practice</title>
+<meta name="description" content="MathDash is a free adaptive math drills for kids app: multiplication timed tests, printable worksheets with answer keys, per-operation mastery tracking, and mistake re-drills — all online, no signup.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#FFFBEB; --card:#FFFDF5; --primary:#F59E0B; --primary-d:#D97706; --accent:#10B981; --accent-d:#059669; --ink:#422006; --ink-soft:#78350F; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--ink); font-family:'Nunito',system-ui,sans-serif; }
+  .font-display { font-family:'Fredoka',sans-serif; }
+  .arena-card { background:var(--card); border:3px solid #FDE68A; border-radius:1.75rem; box-shadow:0 10px 30px rgba(245,158,11,.12); }
+  .btn-chunky { background:linear-gradient(135deg,#FBBF24,#F59E0B); color:#422006; font-weight:800; border-radius:1rem; padding:.8rem 1.6rem; border-bottom:5px solid #D97706; transition:transform .12s ease, border-bottom-width .12s ease; }
+  .btn-chunky:hover { transform:translateY(-1px); }
+  .btn-chunky:active { transform:translateY(3px); border-bottom-width:2px; }
+  .btn-green { background:linear-gradient(135deg,#34D399,#10B981); color:#fff; border-bottom:5px solid #059669; }
+  .btn-green:active { border-bottom-width:2px; }
+  .btn-ghost { border:2px dashed #F59E0B; color:var(--ink-soft); border-radius:1rem; padding:.7rem 1.2rem; font-weight:700; transition:background .15s ease; }
+  .btn-ghost:hover { background:#FEF3C7; }
+  .op-chip { border:3px solid #FDE68A; background:#fff; border-radius:1rem; padding:.6rem .9rem; font-weight:800; cursor:pointer; transition:all .15s ease; user-select:none; }
+  .op-chip.active { background:var(--primary); border-color:var(--primary-d); color:#fff; box-shadow:0 4px 0 #D97706; transform:translateY(-1px); }
+  .mode-tab { border-radius:9999px; padding:.55rem 1.15rem; font-weight:800; font-size:.9rem; border:2px solid transparent; cursor:pointer; transition:all .15s ease; color:var(--ink-soft); }
+  .mode-tab.active { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .key-btn { background:#fff; border:2px solid #FDE68A; border-radius:1rem; font-size:1.5rem; font-weight:800; padding:.7rem 0; color:var(--ink); box-shadow:0 3px 0 #FDE68A; transition:all .1s ease; }
+  .key-btn:active { transform:translateY(2px); box-shadow:none; }
+  .key-btn.op { background:#FEF3C7; }
+  .mast-bar { background:#FEF3C7; border-radius:9999px; overflow:hidden; height:14px; border:2px solid #FDE68A; }
+  .mast-fill { background:linear-gradient(90deg,#F59E0B,#10B981); height:100%; transition:width .6s ease; border-radius:9999px; }
+  .problem-card { background:linear-gradient(160deg,#FFFFFF,#FEF3C7); border:4px solid var(--primary); border-radius:2rem; box-shadow:0 12px 0 rgba(217,119,6,.18), 0 20px 40px rgba(245,158,11,.15); }
+  .feedback-pop { animation:pop .35s ease; }
+  @keyframes pop { 0% { transform:scale(.7); opacity:0; } 60% { transform:scale(1.08); } 100% { transform:scale(1); opacity:1; } }
+  .confetti-dot { position:absolute; width:10px; height:10px; border-radius:3px; animation:fall 1.2s ease-in forwards; pointer-events:none; }
+  @keyframes fall { to { transform:translateY(120px) rotate(220deg); opacity:0; } }
+  .streak-flame { animation:flick .5s ease infinite alternate; display:inline-block; }
+  @keyframes flick { from { transform:scale(1) rotate(-4deg); } to { transform:scale(1.15) rotate(4deg); } }
+  details.faq { background:var(--card); border:2px solid #FDE68A; border-radius:1rem; }
+  details.faq summary { cursor:pointer; padding:1rem 1.25rem; font-weight:800; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:1rem; color:var(--ink); }
+  details.faq summary::-webkit-details-marker { display:none; }
+  details.faq summary::after { content:'+'; color:var(--primary-d); font-size:1.6rem; font-weight:800; flex:none; }
+  details.faq[open] summary::after { content:'−'; }
+  details.faq .faq-body { padding:0 1.25rem 1.25rem; color:var(--ink-soft); line-height:1.7; }
+  .article-prose h2 { color:var(--primary-d); font-size:1.5rem; font-weight:800; margin:2.2rem 0 .9rem; font-family:'Fredoka',sans-serif; }
+  .article-prose h3 { color:var(--accent-d); font-size:1.15rem; font-weight:800; margin:1.6rem 0 .6rem; }
+  .article-prose p { margin:.9rem 0; line-height:1.8; color:#573510; }
+  .article-prose ul { margin:.9rem 0; padding-left:1.4rem; list-style:disc; color:#573510; line-height:1.8; }
+  .article-prose li { margin:.4rem 0; }
+  .article-prose table { width:100%; border-collapse:collapse; margin:1.2rem 0; font-size:.9rem; }
+  .article-prose th { background:#FEF3C7; color:var(--primary-d); text-align:left; padding:.6rem .8rem; border:2px solid #FDE68A; }
+  .article-prose td { padding:.55rem .8rem; border:2px solid #FDE68A; color:#573510; }
+  .mistake-row { background:#FFFBEB; border:2px solid #FCA5A5; border-radius:.9rem; padding:.6rem .9rem; }
+  .print-sheet { background:#fff; color:#111; }
+  @media print {
+    .no-print { display:none !important; }
+    body { background:#fff; }
+    #printArea { display:block !important; }
+    .screen-only { display:none !important; }
+  }
+  #printArea { display:none; }
+</style>
+</head>
+<body class="min-h-screen screen-only-wrap">
+
+<!-- Sticky header -->
+<header class="no-print sticky top-0 z-50" style="background:rgba(255,251,235,.94); backdrop-filter:blur(10px); border-bottom:3px solid #FDE68A;">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2.5">
+      <svg width="38" height="38" viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="2" y="2" width="36" height="36" rx="11" fill="#F59E0B"/>
+        <path d="M11 13l4 4-4 4M18 25h8" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="30" cy="11" r="3.4" fill="#10B981" stroke="#fff" stroke-width="2"/>
+      </svg>
+      <span class="font-display text-2xl font-700 tracking-tight" style="font-weight:700;">Math<span style="color:#F59E0B">Dash</span></span>
+    </a>
+    <nav class="flex items-center gap-5 text-sm font-bold">
+      <a href="#top" class="hover:text-[#D97706] transition-colors">Home</a>
+      <a href="https://fixoraa.tech" class="hover:text-[#D97706] transition-colors">More Tools</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="no-print max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-4 text-center">
+  <div class="inline-block mb-4 px-4 py-1.5 rounded-full font-extrabold text-sm" style="background:#D1FAE5; color:#059669; border:2px solid #6EE7B7;">Adaptive · Timed · Printable</div>
+  <h1 class="font-display text-4xl sm:text-6xl font-bold leading-tight">Math Drills That <span style="color:#F59E0B">Level Up</span> With Your Kid</h1>
+  <p class="mt-4 max-w-2xl mx-auto text-lg" style="color:#78350F;">Practice addition, subtraction, multiplication and division. Problems get harder as your child improves, mistakes get re-drilled automatically, and every worksheet prints with an answer key.</p>
+  <div class="mt-5 inline-flex items-center gap-2 rounded-full px-5 py-2 font-extrabold" id="mdBadge" style="background:#D1FAE5; border:2px solid #10B981; color:#065F46;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>
+    Unlimited Free Usage — no signup, no paywall
+  </div>
+</section>
+
+<!-- TOP AD (verbatim) -->
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TOOL ============ -->
+<main class="no-print max-w-6xl mx-auto px-4 sm:px-6 py-8">
+
+  <!-- Setup bar -->
+  <section class="arena-card p-5 sm:p-6 mb-6">
+    <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
+      <div>
+        <label for="mdAvatarName" class="block text-sm font-extrabold mb-1" style="color:#92400E;">Player name</label>
+        <input id="mdAvatarName" type="text" maxlength="20" placeholder="e.g. Aarav"
+          class="rounded-xl px-4 py-2.5 font-bold border-2 w-full sm:w-56" style="border-color:#FDE68A; background:#fff;">
+      </div>
+      <div>
+        <span class="block text-sm font-extrabold mb-1" style="color:#92400E;">Operations</span>
+        <div id="mdOps" class="flex flex-wrap gap-2">
+          <button type="button" class="op-chip active" data-op="add">+ Add</button>
+          <button type="button" class="op-chip active" data-op="sub">− Subtract</button>
+          <button type="button" class="op-chip active" data-op="mul">× Multiply</button>
+          <button type="button" class="op-chip active" data-op="div">÷ Divide</button>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 flex flex-wrap gap-2 justify-center" role="tablist" aria-label="Modes">
+      <button type="button" id="mdModePractice" class="mode-tab active">🎯 Practice</button>
+      <button type="button" id="mdModeSprint" class="mode-tab">⚡ Sprint</button>
+      <button type="button" id="mdModeMistakes" class="mode-tab">🧠 Mistake Re-drill</button>
+      <button type="button" id="mdModeWorksheet" class="mode-tab">🖨️ Worksheet</button>
+    </div>
+  </section>
+
+  <!-- Practice arena -->
+  <section id="mdPanelPractice" class="grid lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2">
+      <div class="problem-card relative p-6 sm:p-10 text-center overflow-hidden">
+        <div id="mdConfetti" class="absolute inset-0 pointer-events-none"></div>
+        <div class="flex items-center justify-center gap-3 flex-wrap mb-5">
+          <span id="mdLevelBadge" class="font-display font-bold text-sm px-3 py-1 rounded-full" style="background:#D1FAE5; color:#065F46;">Level 1 · + Addition</span>
+          <span id="mdStreak" class="font-extrabold text-sm px-3 py-1 rounded-full" style="background:#FEF3C7; color:#92400E;">Streak 0</span>
+          <span id="mdScore" class="font-extrabold text-sm px-3 py-1 rounded-full" style="background:#FFFBEB; color:#92400E; border:2px solid #FDE68A;">0 XP</span>
+        </div>
+        <div id="mdProblemText" class="font-display font-bold text-6xl sm:text-7xl my-6" style="color:#422006;">7 + 5 = ?</div>
+        <div id="mdFeedback" class="min-h-[2.5rem] font-extrabold text-lg mb-3" aria-live="polite"></div>
+        <div class="flex justify-center">
+          <input id="mdAnswerInput" type="text" inputmode="numeric" autocomplete="off" placeholder="?"
+            class="text-center font-display font-bold text-4xl rounded-2xl py-3 px-4 w-40 border-4" style="border-color:#F59E0B; background:#fff;" aria-label="Your answer">
+        </div>
+        <div id="mdKeypad" class="grid grid-cols-3 gap-2 max-w-xs mx-auto mt-4">
+          <button type="button" class="key-btn" data-k="1">1</button>
+          <button type="button" class="key-btn" data-k="2">2</button>
+          <button type="button" class="key-btn" data-k="3">3</button>
+          <button type="button" class="key-btn" data-k="4">4</button>
+          <button type="button" class="key-btn" data-k="5">5</button>
+          <button type="button" class="key-btn" data-k="6">6</button>
+          <button type="button" class="key-btn" data-k="7">7</button>
+          <button type="button" class="key-btn" data-k="8">8</button>
+          <button type="button" class="key-btn" data-k="9">9</button>
+          <button type="button" class="key-btn op" data-k="C">⌫</button>
+          <button type="button" class="key-btn" data-k="0">0</button>
+          <button type="button" class="key-btn op" data-k="-">−</button>
+        </div>
+        <div class="flex gap-3 justify-center mt-5">
+          <button type="button" id="mdCheckBtn" class="btn-chunky btn-green">Check ✓</button>
+          <button type="button" id="mdSkipBtn" class="btn-ghost">Skip →</button>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col gap-6">
+      <div class="arena-card p-5">
+        <h2 class="font-display font-bold text-xl mb-3">🏆 Mastery Dashboard</h2>
+        <div id="mdMasteryBoard" class="flex flex-col gap-3"></div>
+      </div>
+      <div class="arena-card p-5">
+        <h2 class="font-display font-bold text-xl mb-2">📊 Session</h2>
+        <div id="mdSessionStats" class="text-sm font-bold" style="color:#92400E;">No problems yet — start drilling!</div>
+        <button type="button" id="mdResetBtn" class="btn-ghost mt-3 w-full text-sm">Reset session</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sprint panel -->
+  <section id="mdPanelSprint" class="hidden">
+    <div class="arena-card p-6 sm:p-8 text-center max-w-2xl mx-auto">
+      <h2 class="font-display font-bold text-3xl mb-2">⚡ Sprint Mode</h2>
+      <p class="font-bold mb-5" style="color:#92400E;">Beat the clock. Chain streaks for bonus XP.</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center items-center mb-5">
+        <label for="mdSprintSelect" class="font-extrabold">Choose sprint:</label>
+        <select id="mdSprintSelect" class="rounded-xl px-4 py-2.5 font-bold border-2" style="border-color:#FDE68A; background:#fff;">
+          <option value="blitz-30">30-Second Blitz</option>
+          <option value="sprint-60">60-Second Sprint</option>
+          <option value="race-10">10-Problem Race</option>
+          <option value="race-25">25-Problem Marathon</option>
+        </select>
+        <button type="button" id="mdSprintStart" class="btn-chunky">Start Sprint 🚀</button>
+      </div>
+      <div class="flex items-center justify-center gap-4 mb-4">
+        <span id="mdSprintTime" class="font-display font-bold text-4xl" style="color:#D97706;">—</span>
+        <span id="mdSprintStreak" class="font-extrabold px-3 py-1 rounded-full" style="background:#FEF3C7; color:#92400E;">Streak 0</span>
+      </div>
+      <div id="mdSprintProblem" class="font-display font-bold text-5xl my-4">Ready?</div>
+      <div class="flex justify-center gap-3 items-center">
+        <input id="mdSprintAnswer" type="text" inputmode="numeric" autocomplete="off" placeholder="?"
+          class="text-center font-display font-bold text-3xl rounded-2xl py-2 px-3 w-32 border-4" style="border-color:#10B981; background:#fff;" aria-label="Sprint answer">
+        <button type="button" id="mdSprintGo" class="btn-chunky btn-green">Go ✓</button>
+      </div>
+      <div id="mdSprintResult" class="mt-5 min-h-[3rem] font-extrabold"></div>
+    </div>
+  </section>
+
+  <!-- Mistake re-drill panel -->
+  <section id="mdPanelMistakes" class="hidden">
+    <div class="arena-card p-6 sm:p-8 max-w-3xl mx-auto">
+      <h2 class="font-display font-bold text-3xl mb-2 text-center">🧠 Mistake Bank</h2>
+      <p class="font-bold text-center mb-5" style="color:#92400E;">Every wrong answer is saved here and re-drilled until it sticks.</p>
+      <div class="text-center mb-4">
+        <span id="mdMistakeCount" class="font-extrabold px-4 py-1.5 rounded-full" style="background:#FEE2E2; color:#991B1B;">0 mistakes banked</span>
+      </div>
+      <div class="text-center mb-5">
+        <button type="button" id="mdReDrillBtn" class="btn-chunky">Re-drill my mistakes 🔁</button>
+      </div>
+      <div id="mdMistakeList" class="flex flex-col gap-2 max-h-72 overflow-y-auto"></div>
+    </div>
+  </section>
+
+  <!-- Worksheet panel -->
+  <section id="mdPanelWorksheet" class="hidden">
+    <div class="arena-card p-6 sm:p-8 max-w-3xl mx-auto">
+      <h2 class="font-display font-bold text-3xl mb-2 text-center">🖨️ Printable Worksheet</h2>
+      <p class="font-bold text-center mb-5" style="color:#92400E;">Generated at your child's current level. Prints with an answer key.</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center items-center mb-5">
+        <label for="mdWorksheetCount" class="font-extrabold">Problems:</label>
+        <select id="mdWorksheetCount" class="rounded-xl px-4 py-2.5 font-bold border-2" style="border-color:#FDE68A; background:#fff;">
+          <option value="10">10</option>
+          <option value="20" selected>20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select>
+        <label for="mdWorksheetLevel" class="font-extrabold">Level:</label>
+        <select id="mdWorksheetLevel" class="rounded-xl px-4 py-2.5 font-bold border-2" style="border-color:#FDE68A; background:#fff;">
+          <option value="1">1 · Starter</option>
+          <option value="2">2 · Building</option>
+          <option value="3">3 · Confident</option>
+          <option value="4">4 · Advanced</option>
+          <option value="5">5 · Whiz</option>
+        </select>
+        <button type="button" id="mdBuildSheetBtn" class="btn-chunky btn-green">Build sheet ✨</button>
+      </div>
+      <div id="mdWorksheetPreview" class="print-sheet rounded-2xl border-2 p-6 mb-4" style="border-color:#FDE68A;">
+        <p class="text-center font-bold text-slate-400">Click “Build sheet” to preview your worksheet.</p>
+      </div>
+      <div class="text-center flex flex-col sm:flex-row gap-3 justify-center">
+        <button type="button" id="mdPrintBtn" class="btn-chunky">🖨️ Print worksheet + answer key</button>
+      </div>
+      <p class="text-center text-sm font-bold mt-3" style="color:#92400E;">Tip: the answer key prints on page 2 of the same print job.</p>
+    </div>
+  </section>
+</main>
+
+<!-- Print-only worksheet area -->
+<div id="printArea">
+  <div id="mdPrintSheet" class="print-sheet" style="padding:24px; font-family:Georgia,serif;"></div>
+  <div id="mdPrintKey" class="print-sheet" style="padding:24px; font-family:Georgia,serif; page-break-before:always;"></div>
+</div>
+
+<!-- BOTTOM AD (verbatim) -->
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="464498"></script>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SEO ARTICLE ============ -->
+<article id="seo-article" class="no-print max-w-4xl mx-auto px-4 sm:px-6 pb-10 article-prose">
+  <h2>The Parent's Guide to Math Drills for Kids: Building Fluency That Lasts</h2>
+  <p>Every parent has watched the same scene play out at the kitchen table: a child stares at 7 × 8, counts on their fingers, hesitates, guesses 54, and then looks up for rescue. It is not a lack of intelligence — it is a lack of fluency. Math fluency, the ability to recall basic facts quickly and accurately, is the foundation that every later math skill sits on. Long division collapses without multiplication facts. Fractions become torture without instant recall of times tables. Algebra feels impossible when every step requires pausing to compute 6 + 9. That is why thoughtfully designed math drills for kids remain one of the highest-leverage investments a parent or teacher can make: ten focused minutes a day can change a child's entire relationship with numbers.</p>
+  <p>But not all drill practice is created equal. The classic worksheet packet — fifty identical problems, no feedback, no adaptation — bores strong students and overwhelms struggling ones. A child who already knows 2 × 3 gains nothing from drilling it fifty times, while a child who cannot yet add to ten is crushed by a sheet full of double-digit addition. Modern math facts practice online solves this mismatch by doing what paper cannot: it watches how the child performs and adjusts in real time. When a learner answers three problems in a row correctly, the difficulty steps up. When two mistakes land back to back, it steps down to rebuild confidence. This is the adaptive difficulty engine at the heart of MathDash, and it is the single biggest reason digital drills outperform static worksheets for most children.</p>
+  <h3>Why Adaptive Difficulty Works Better Than Fixed Worksheets</h3>
+  <p>Educational psychologists call the sweet spot of learning the "zone of proximal development" — the band of difficulty where a task is challenging enough to require effort but easy enough to be solvable. Fixed worksheets cannot stay in that band: the same sheet is too easy for the top third of a class and too hard for the bottom third. An adaptive engine keeps every child in their own band, individually, problem by problem. In MathDash, each operation — addition, subtraction, multiplication, division — carries its own level from 1 to 5. A child might be cruising at Level 4 in addition while rebuilding at Level 1 in division, and that is completely normal. Operations develop at different speeds, and a per-operation adaptive track respects that instead of forcing a single global difficulty.</p>
+  <p>The level-up rule is deliberately transparent for kids: three correct answers in a row raises the level, two wrong answers in a row lowers it. Children quickly internalize this. They can feel themselves climbing, which turns an abstract worksheet into a game they want to win. And because the difficulty never jumps more than one level at a time, the child is never ambushed by an impossible problem. Struggling learners get the gentle on-ramp they need; advanced learners get pushed before boredom sets in. Parents who have tried one-size-fits-all drill apps usually notice the difference within a single session: the child stops asking "is this ever going to end?" and starts asking "can I try the next level?"</p>
+  <h3>Timed Practice: Where Speed Meets Confidence</h3>
+  <p>Accuracy is only half of fluency. A child who eventually arrives at 9 × 6 = 54 after twenty seconds of counting is not fluent, and that slowness will tax their working memory during harder problems. Timed practice — answering as many facts as possible inside a short window — trains the automaticity that frees the brain for higher thinking. This is why so many parents search for a multiplication timed test printable: the one-minute multiplication test has been a classroom staple for decades because it works. The timer adds gentle pressure, the score gives a concrete target to beat, and the format is simple enough for daily use.</p>
+  <p>MathDash bakes timed practice into its sprint modes. The 30-Second Blitz and 60-Second Sprint ask one question: how many can you answer correctly before the clock runs out? The 10-Problem Race and 25-Problem Marathon flip the format: how fast can you finish a fixed set with high accuracy? Each sprint ends with a bronze, silver, or gold rating based on both speed and accuracy, which matters — pure speed without accuracy is just fast guessing, and the rating system teaches that. Kids love chasing a better rating more than they love beating a raw number, because the rating feels like a rank in a video game. For parents who prefer paper, the worksheet generator below produces a multiplication timed test printable in one click: twenty or fifty problems at the child's current level, ready to print and time with a kitchen timer.</p>
+  <h3>Math Facts Practice Online vs. Paper: Use Both</h3>
+  <p>Online practice has decisive advantages: instant feedback, adaptive difficulty, automatic tracking, and zero printing. When a child answers 8 + 5 = 14, MathDash can immediately show the correct answer, bank the mistake for re-drilling, and slightly lower the level — all in under a second. Paper cannot do any of that. But paper has its own strengths. Writing answers by hand slows the child down in a productive way, builds the habit of showing work, and removes screen-time concerns. Teachers still assign paper homework, and children still take paper exams. The honest answer is that the best approach combines both: use math facts practice online for daily adaptive drilling, and use printable worksheets for handwriting practice, homework, and classroom-style timed tests.</p>
+  <p>That is exactly the workflow MathDash supports. The drill arena handles the daily digital practice with instant feedback and streak rewards. The mistake bank collects every wrong answer from those sessions and re-drills them until the child answers correctly — a spaced-review loop that paper packets simply cannot automate. And when you want paper, the worksheet builder generates a fresh sheet at the child's current level with a complete answer key on the second page, so grading takes seconds instead of minutes. The digital and printable halves reinforce each other: drill online to find the weak spots, print to practice them by hand.</p>
+  <h3>The Mistake Bank: Turning Wrong Answers Into the Curriculum</h3>
+  <p>Most drill tools throw wrong answers away. The child gets a red X, maybe a correct answer flashes by, and the session moves on. A week later the same child misses the same fact — because nothing ever forced them to revisit it. MathDash treats every mistake as the most valuable data in the system. Each wrong answer goes into the mistake bank, a persistent list the child (or parent) can see and re-drill on demand. The re-drill queue sorts by miss count, so the most stubborn facts come first. Answering a banked fact correctly during re-drill removes it from the bank, which gives the child a visible, satisfying sense of clearing their weak spots one by one.</p>
+  <p>This is essentially a lightweight version of spaced repetition, the study technique with the strongest evidence base in cognitive science. The twist is that the spacing is driven by the child's own errors rather than a fixed schedule: the facts they miss are exactly the facts that need review. Parents are often surprised by what lands in the bank. It is rarely the "hard" facts like 8 × 7. More often it is subtraction facts like 14 − 8, or division facts like 36 ÷ 4 — the operations that get less classroom airtime than multiplication. The mistake bank makes these invisible gaps visible, which is the first step to fixing them.</p>
+  <h3>The Mastery Dashboard: One Score Per Operation</h3>
+  <p>Parents need more than "your child practiced for ten minutes." They need to know: is addition solid? Is division lagging? The mastery dashboard answers that with one 0–100 score per operation, built from rolling accuracy weighted toward recent performance. A child who struggled last month but is nailing problems this week will see their score climb, because the dashboard cares about the trajectory, not the ancient history. Each score maps to a star rating — one, two, or three stars — which is the only part most kids care about, and that is fine. Stars are a language children already speak.</p>
+  <p>The dashboard also drives the worksheet generator. When you build a printable sheet, you choose the level — and the dashboard tells you which level is honest for each operation. A child with 92% addition mastery and three stars is ready for Level 4 or 5 addition sheets; a child sitting at 35% division mastery should be printing Level 1 or 2 division sheets until the score climbs. This closed loop — drill, measure, print at the right level, drill again — is what turns casual practice into a real improvement program. Teachers can use the same loop for differentiated homework: every student in the class prints a sheet at their own level, from the same one-click tool.</p>
+  <h3>How to Run a Daily 10-Minute Drill Routine</h3>
+  <p>Consistency beats duration. Ten focused minutes every day will outperform a single exhausted hour on Sunday, because fluency is built by repeated retrieval, not by marathon sessions. Here is a simple routine that works for ages 6 to 12. First, open the drill arena and let the child warm up in practice mode for about five minutes, with the operations set to whatever the school is currently covering. The adaptive engine handles the difficulty, so the parent does not need to calibrate anything. Second, run one sprint — the 30-Second Blitz is perfect — and have the child try to beat yesterday's score. Write the score on the fridge; visible progress is motivating. Third, once or twice a week, open the mistake bank and re-drill whatever is banked. If the bank is empty, that is a victory worth celebrating, not a sign the tool is broken.</p>
+  <p>A few practical tips make the routine stick. Practice at the same time each day, ideally before screens and snacks rather than after — a tired, sugar-crashed brain does not retain facts well. Keep the on-screen keypad available for younger children who type slowly; the goal is math fluency, not typing speed, and hunting for number keys adds noise to the measurement. Celebrate streaks out loud. A ten-problem streak feels enormous to a seven-year-old, and the app's streak counter gives you something concrete to praise beyond "good job." And when frustration appears — two wrong answers in a row, the level drops — narrate it as the app helping, not punishing: "See? It noticed that was too hard and made it easier. Smart." Children take their emotional cues about math from adults, and a calm, game-like framing of mistakes prevents the anxiety spiral that kills so much math confidence.</p>
+  <h3>What the Research Says About Drill and Fluency</h3>
+  <p>Skeptics sometimes argue that drill is "rote" and that conceptual understanding should come first. The research consensus is more nuanced: conceptual understanding and procedural fluency develop together, and each supports the other. A child who understands why 7 × 8 = 56 (seven groups of eight) still benefits enormously from recalling it instantly, because instant recall frees working memory for the multi-step problems where understanding is really tested. Studies of timed math-fact practice consistently show gains not just in speed but in accuracy on broader assessments, precisely because fluent facts stop consuming the mental bandwidth needed for problem-solving.</p>
+  <p>The key qualifier is that drill must be at the right difficulty — which brings us back to adaptivity. Drill that is too easy produces no learning; drill that is too hard produces anxiety and avoidance. The three-up, two-down rule in MathDash is a simple, transparent implementation of the adaptive principle that keeps children in the productive band. It is not a black box: the child can see exactly why the level changed, which builds metacognition — the ability to notice "this is getting hard" or "this is too easy" — a skill that transfers far beyond arithmetic.</p>
+  <h3>Printable Worksheets and Answer Keys: The Paper Half</h3>
+  <p>For all the power of digital drills, paper still rules in many real situations: homework folders, classrooms without enough devices, grandparents who want to help, and families limiting screen time. A good printable worksheet needs three things: problems at the right difficulty, clean formatting with room to write, and an answer key so the adult is not computing fifty answers by hand. MathDash generates all three in one click. Choose 10, 20, 30, or 50 problems, pick the level from Starter to Whiz, and hit print. The problems print on page one; the complete answer key prints on page two.</p>
+  <p>The worksheet difficulty levels map directly to the drill levels, so the paper practice and the digital practice stay in sync. A parent running the daily routine above can print Friday's sheet at whatever level the child reached that week — the sheet becomes a weekly checkpoint. Teachers can generate differentiated sets in seconds: the advanced table gets Level 4 multiplication, the developing table gets Level 2, and nobody can tell whose sheet is "easier" because every sheet looks the same. And because each sheet is freshly generated, the answers are never the same twice — no memorizing the answer key from last week's identical packet.</p>
+  <h3>Choosing Operations: What to Drill at Each Age</h3>
+  <table>
+    <tr><th>Age / Grade</th><th>Focus operations</th><th>Suggested starting level</th></tr>
+    <tr><td>Ages 6–7 (Grades 1–2)</td><td>Addition, subtraction</td><td>Level 1–2</td></tr>
+    <tr><td>Ages 8–9 (Grades 3–4)</td><td>Addition, subtraction, multiplication</td><td>Level 2–3</td></tr>
+    <tr><td>Ages 10–12 (Grades 5–6)</td><td>All four operations</td><td>Level 3–4</td></tr>
+  </table>
+  <p>These are starting points, not rules. The adaptive engine will correct a wrong starting choice within a few problems: start too high and two quick misses drop the level; start too low and three quick hits raise it. That self-correction is the whole point. One caution for division: MathDash only generates clean division problems (no remainders) through the drill levels, because the goal at this stage is fact fluency — recognizing that 48 ÷ 6 = 8 — not long division with remainders. Remainders belong to the conceptual lesson; instant quotient recall belongs to the drill.</p>
+  <h3>Frequently Asked Questions</h3>
+  <details class="faq">
+    <summary>What age is MathDash best for?</summary>
+    <div class="faq-body"><p>MathDash is designed for ages 6 to 12, roughly grades 1 through 6. Younger children (ages 6–7) should stick to addition and subtraction at Levels 1–2 and use the on-screen keypad, since typing speed should not get in the way of math practice. Older children (ages 10–12) can enable all four operations and use the sprint modes for timed fluency work. The adaptive engine adjusts to the individual child regardless of age, so a struggling 10-year-old and an advanced 7-year-old can both find their right level within a few problems.</p></div>
+  </details>
+  <details class="faq">
+    <summary>How does the adaptive difficulty actually work?</summary>
+    <div class="faq-body"><p>Each operation tracks its own level from 1 to 5. Answer three problems in a row correctly and the level goes up; miss two in a row and it steps down. The rule is deliberately simple so children understand it: they can feel themselves climbing and they know exactly what it takes to reach the next level. Difficulty never jumps more than one level at a time, so a child is never ambushed by an impossible problem, and operations level independently — a child can be Level 4 in addition and Level 1 in division at the same time.</p></div>
+  </details>
+  <details class="faq">
+    <summary>Can I print worksheets with answer keys?</summary>
+    <div class="faq-body"><p>Yes. The worksheet builder generates 10, 20, 30, or 50 problems at any of five difficulty levels, using whichever operations you have enabled. Clicking print sends a clean two-page job: the problems on page one with room to write answers, and the complete answer key on page two. Because every sheet is freshly generated, no two printouts are identical, and the difficulty levels match the drill levels so paper practice stays in sync with digital practice.</p></div>
+  </details>
+  <details class="faq">
+    <summary>What is the mistake bank and how does re-drilling help?</summary>
+    <div class="faq-body"><p>Every wrong answer is automatically saved to the mistake bank instead of being thrown away. The re-drill queue presents banked problems sorted by miss count, so the most stubborn facts come first. Answering a banked fact correctly during re-drill removes it from the bank. This is a lightweight form of spaced repetition driven by the child's own errors — the exact facts they miss are the exact facts that get reviewed, which is far more efficient than re-drilling everything.</p></div>
+  </details>
+  <details class="faq">
+    <summary>Is MathDash really free? Do I need an account?</summary>
+    <div class="faq-body"><p>Yes, completely free with unlimited usage and no account, no signup, and no paywall. All practice data — levels, streaks, mastery scores, and the mistake bank — is stored only in your own browser's local storage. Nothing is uploaded anywhere, which also means progress does not sync between devices; each browser keeps its own session history.</p></div>
+  </details>
+  <details class="faq">
+    <summary>How is this different from other math facts practice online?</summary>
+    <div class="faq-body"><p>Three things set it apart. First, truly per-operation adaptive difficulty rather than one global level. Second, the mistake bank with automatic re-drilling — most tools show a red X and move on, losing the most valuable data in the session. Third, the one-click printable worksheet with a real answer key, so the digital practice and paper practice reinforce each other instead of living in separate worlds. Sprint modes with streaks and bronze/silver/gold ratings round it out for timed fluency work.</p></div>
+  </details>
+</article>
+
+<!-- Footer -->
+<footer class="no-print max-w-6xl mx-auto px-4 sm:px-6 pb-10 text-center">
+  <div class="flex items-center justify-center gap-5 text-sm font-bold" style="color:#92400E;">
+    <a href="#top" class="hover:text-[#D97706]">Home</a>
+    <span aria-hidden="true">·</span>
+    <a href="https://fixoraa.tech" class="hover:text-[#D97706]">More Tools</a>
+  </div>
+  <p class="mt-2 text-xs font-bold" style="color:#B45309;">MathDash — free adaptive math drills for kids. Made for little mathematicians everywhere.</p>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What age is MathDash best for?", "acceptedAnswer": { "@type": "Answer", "text": "MathDash is designed for ages 6 to 12, roughly grades 1 through 6. The adaptive engine adjusts to the individual child regardless of age, so both struggling and advanced learners find their right level within a few problems." } },
+    { "@type": "Question", "name": "How does the adaptive difficulty actually work?", "acceptedAnswer": { "@type": "Answer", "text": "Each operation tracks its own level from 1 to 5. Three correct answers in a row raise the level; two wrong answers in a row lower it. Operations level independently, so a child can be Level 4 in addition and Level 1 in division at the same time." } },
+    { "@type": "Question", "name": "Can I print worksheets with answer keys?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The worksheet builder generates 10 to 50 problems at five difficulty levels. Printing produces the problems on page one and the complete answer key on page two." } },
+    { "@type": "Question", "name": "What is the mistake bank and how does re-drilling help?", "acceptedAnswer": { "@type": "Answer", "text": "Every wrong answer is saved to the mistake bank and re-drilled in miss-count order until answered correctly, a lightweight form of spaced repetition driven by the child's own errors." } },
+    { "@type": "Question", "name": "Is MathDash really free? Do I need an account?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free with unlimited usage, no account, no signup, and no paywall. All progress is stored only in the browser's local storage." } },
+    { "@type": "Question", "name": "How is this different from other math facts practice online?", "acceptedAnswer": { "@type": "Answer", "text": "Per-operation adaptive difficulty, a mistake bank with automatic re-drilling, and one-click printable worksheets with answer keys, plus sprint modes with streaks and ratings for timed fluency work." } }
+  ]
+}
+</script>
+
+<!-- Pure logic library (inlined at build time) -->
+<script id="v3-mathdash-adaptive-math-drill-lib">
+/* MathDash pure logic — adaptive math drills for kids.
+ * Pure functions only: no document/window access, no DOM, no network.
+ *
+ * Adaptive engine: each operation (+ - x /) has a level 1..5. Three correct
+ * answers in a row raise the level; two wrong answers in a row lower it.
+ * Wrong answers go into the mistake bank; re-drilling them until correct
+ * drains the bank. Mastery per operation is a 0..100 score built from a
+ * weighted rolling accuracy.
+ */
+var MathDash = (function () {
+  'use strict';
+
+  var OPS = ['add', 'sub', 'mul', 'div'];
+
+  var OP_META = {
+    add: { symbol: '+', label: 'Addition' },
+    sub: { symbol: '−', label: 'Subtraction' },
+    mul: { symbol: '×', label: 'Multiplication' },
+    div: { symbol: '÷', label: 'Division' }
+  };
+
+  var MIN_LEVEL = 1;
+  var MAX_LEVEL = 5;
+  var LEVEL_UP_STREAK = 3;   // 3 correct in a row -> level up
+  var LEVEL_DOWN_STREAK = 2; // 2 wrong in a row -> level down
+  var MISTAKE_BANK_CAP = 60;
+
+  /* ------------------------------------------------------------------ */
+  /* Level ranges: [lo, hi] per operation & level (inclusive).           */
+  /* ------------------------------------------------------------------ */
+  var RANGES = {
+    add: [[1, 9], [5, 20], [10, 50], [10, 99], [10, 199]],
+    sub: [[1, 9], [5, 20], [10, 50], [10, 99], [10, 199]],
+    mul: [[2, 5], [2, 9], [3, 10], [4, 12], [6, 15]],
+    div: [[2, 5], [2, 9], [3, 10], [4, 12], [6, 15]]
+  };
+
+  function num(v, fallback) {
+    var n = Number(v);
+    return (isFinite(n) ? n : fallback);
+  }
+
+  function clampInt(v, lo, hi, fallback) {
+    var n = Math.round(num(v, fallback));
+    if (n < lo) return lo;
+    if (n > hi) return hi;
+    return n;
+  }
+
+  function cleanStr(s) {
+    return (s === null || s === undefined) ? '' : String(s).trim();
+  }
+
+  function opMeta(op) {
+    return OP_META[op] || null;
+  }
+
+  // Default RNG wrapper so tests can inject a deterministic rand().
+  function intBetween(lo, hi, rand) {
+    var r = (typeof rand === 'function') ? rand() : Math.random();
+    if (!(r >= 0 && r < 1)) r = 0.5;
+    return lo + Math.floor(r * (hi - lo + 1));
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Problem generator                                                   */
+  /* ------------------------------------------------------------------ */
+
+  // Returns { op, a, b, answer, text }. `rand` optional for determinism.
+  function genProblem(op, level, rand) {
+    var meta = opMeta(op);
+    if (!meta) return null;
+    var lvl = clampInt(level, MIN_LEVEL, MAX_LEVEL, 1);
+    var range = RANGES[op][lvl - 1];
+    var lo = range[0], hi = range[1];
+    var a, b, answer;
+
+    if (op === 'add') {
+      a = intBetween(lo, hi, rand);
+      b = intBetween(lo, hi, rand);
+      answer = a + b;
+    } else if (op === 'sub') {
+      a = intBetween(lo, hi, rand);
+      b = intBetween(lo, Math.max(lo, a), rand);
+      // keep b <= a so kids don't see negatives at low levels
+      if (b > a) { var t = a; a = b; b = t; }
+      answer = a - b;
+    } else if (op === 'mul') {
+      a = intBetween(lo, hi, rand);
+      b = intBetween(lo, hi, rand);
+      answer = a * b;
+    } else { // div: clean division only (kid-friendly)
+      b = intBetween(lo, hi, rand);
+      var q = intBetween(lo, Math.max(lo, Math.min(hi, 12)), rand);
+      a = b * q;
+      answer = q;
+    }
+
+    return {
+      op: op,
+      a: a,
+      b: b,
+      answer: answer,
+      text: a + ' ' + meta.symbol + ' ' + b + ' = ?'
+    };
+  }
+
+  // Mixed problem: pick an operation from the enabled set, round-robin-ish.
+  function genMixedProblem(enabledOps, levelByOp, rand) {
+    var ops = (Array.isArray(enabledOps) ? enabledOps : []).filter(function (o) { return !!opMeta(o); });
+    if (!ops.length) return null;
+    var idx = intBetween(0, ops.length - 1, rand);
+    var chosen = ops[idx];
+    var lvl = levelByOp && levelByOp[chosen] ? clampInt(levelByOp[chosen], MIN_LEVEL, MAX_LEVEL, 1) : 1;
+    return genProblem(chosen, lvl, rand);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Session state                                                       */
+  /* ------------------------------------------------------------------ */
+
+  function freshOpState() {
+    return { level: 1, attempts: 0, correct: 0, winStreak: 0, loseStreak: 0, bestStreak: 0 };
+  }
+
+  function initialState() {
+    var byOp = {};
+    for (var i = 0; i < OPS.length; i++) byOp[OPS[i]] = freshOpState();
+    return {
+      byOp: byOp,
+      totalAttempts: 0,
+      totalCorrect: 0,
+      sessionStreak: 0,
+      sessionBestStreak: 0,
+      mistakeBank: [],   // [{op,a,b,answer,text,misses}]
+      xp: 0
+    };
+  }
+
+  function mistakeKey(m) {
+    return m.op + ':' + m.a + ':' + m.b;
+  }
+
+  // Push a wrongly-answered problem into the bank (deduped, capped).
+  function bankMistake(state, problem) {
+    if (!state || !problem || !opMeta(problem.op)) return false;
+    var key = mistakeKey(problem);
+    var bank = state.mistakeBank;
+    for (var i = 0; i < bank.length; i++) {
+      if (mistakeKey(bank[i]) === key) {
+        bank[i].misses = (bank[i].misses || 1) + 1;
+        return true; // already banked, just bump misses
+      }
+    }
+    if (bank.length >= MISTAKE_BANK_CAP) bank.shift(); // oldest drops off
+    bank.push({
+      op: problem.op, a: problem.a, b: problem.b,
+      answer: problem.answer, text: problem.text, misses: 1
+    });
+    return true;
+  }
+
+  // Answering a banked problem correctly removes it from the bank.
+  function clearMistake(state, problem) {
+    if (!state || !problem) return false;
+    var key = mistakeKey(problem);
+    var bank = state.mistakeBank;
+    for (var i = 0; i < bank.length; i++) {
+      if (mistakeKey(bank[i]) === key) {
+        bank.splice(i, 1);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Queue of mistakes to re-drill: most-missed first (stable for ties).
+  function reDrillQueue(state) {
+    var bank = (state && Array.isArray(state.mistakeBank)) ? state.mistakeBank : [];
+    return bank.slice().sort(function (x, y) { return (y.misses || 1) - (x.misses || 1); });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Adaptive engine                                                     */
+  /* ------------------------------------------------------------------ */
+
+  // Record one answered problem. Returns a rich result for UI feedback.
+  // grade: 'correct' | 'wrong'. answerSource: 'drill' | 'redrill'.
+  function recordAttempt(state, problem, grade, answerSource) {
+    if (!state || !problem || !opMeta(problem.op)) return null;
+    var good = grade === 'correct';
+    var opState = state.byOp[problem.op];
+    if (!opState) { opState = freshOpState(); state.byOp[problem.op] = opState; }
+
+    var prevLevel = opState.level;
+    opState.attempts++;
+    state.totalAttempts++;
+
+    if (good) {
+      opState.correct++;
+      state.totalCorrect++;
+      opState.winStreak++;
+      opState.loseStreak = 0;
+      state.sessionStreak++;
+      if (opState.winStreak > opState.bestStreak) opState.bestStreak = opState.winStreak;
+      if (state.sessionStreak > state.sessionBestStreak) state.sessionBestStreak = state.sessionStreak;
+      state.xp += 10 * opState.level;
+      if (answerSource === 'redrill') clearMistake(state, problem);
+      if (opState.winStreak >= LEVEL_UP_STREAK && opState.level < MAX_LEVEL) {
+        opState.level++;
+        opState.winStreak = 0;
+      }
+    } else {
+      opState.winStreak = 0;
+      opState.loseStreak++;
+      state.sessionStreak = 0;
+      state.xp += 2; // small consolation XP
+      bankMistake(state, problem);
+      if (opState.loseStreak >= LEVEL_DOWN_STREAK && opState.level > MIN_LEVEL) {
+        opState.level--;
+        opState.loseStreak = 0;
+      }
+    }
+
+    return {
+      correct: good,
+      op: problem.op,
+      levelBefore: prevLevel,
+      levelAfter: opState.level,
+      leveledUp: opState.level > prevLevel,
+      leveledDown: opState.level < prevLevel,
+      winStreak: opState.winStreak,
+      sessionStreak: state.sessionStreak,
+      xp: state.xp,
+      bankSize: state.mistakeBank.length
+    };
+  }
+
+  // 0..100 mastery per operation: rolling accuracy weighted toward recent
+  // performance (win streak boosts, lose streak penalizes), scaled by level.
+  function masteryForOp(state, op) {
+    if (!state || !opMeta(op)) return 0;
+    var s = state.byOp[op] || freshOpState();
+    if (s.attempts === 0) return 0;
+    var acc = s.correct / s.attempts;                 // 0..1
+    var recentBoost = Math.min(15, s.winStreak * 5);  // up to +15
+    var recentDrag = Math.min(20, s.loseStreak * 10); // up to -20
+    var levelFactor = 60 + (s.level - 1) * 10;        // 60..100 scale
+    var raw = (acc * 100 + recentBoost - recentDrag) * (levelFactor / 100);
+    return Math.max(0, Math.min(100, Math.round(raw)));
+  }
+
+  function masteryBoard(state) {
+    var out = [];
+    for (var i = 0; i < OPS.length; i++) {
+      var op = OPS[i];
+      out.push({
+        op: op,
+        label: OP_META[op].label,
+        level: (state && state.byOp[op]) ? state.byOp[op].level : 1,
+        attempts: (state && state.byOp[op]) ? state.byOp[op].attempts : 0,
+        mastery: masteryForOp(state, op)
+      });
+    }
+    return out;
+  }
+
+  // Stars: 0-3 from mastery (kid-friendly reward readout).
+  function masteryStars(mastery) {
+    var m = num(mastery, 0);
+    if (m >= 85) return 3;
+    if (m >= 60) return 2;
+    if (m >= 30) return 1;
+    return 0;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Sprint modes                                                        */
+  /* ------------------------------------------------------------------ */
+
+  var SPRINTS = [
+    { id: 'blitz-30', label: '30-Second Blitz', kind: 'time', limit: 30, problems: 0 },
+    { id: 'sprint-60', label: '60-Second Sprint', kind: 'time', limit: 60, problems: 0 },
+    { id: 'race-10', label: '10-Problem Race', kind: 'count', limit: 0, problems: 10 },
+    { id: 'race-25', label: '25-Problem Marathon', kind: 'count', limit: 0, problems: 25 }
+  ];
+
+  function getSprint(id) {
+    var key = cleanStr(id);
+    for (var i = 0; i < SPRINTS.length; i++) {
+      if (SPRINTS[i].id === key) return SPRINTS[i];
+    }
+    return null;
+  }
+
+  // Score a finished sprint. Returns rating for kids (bronze/silver/gold).
+  function scoreSprint(sprintId, correctCount, attemptedCount, elapsedSec) {
+    var sp = getSprint(sprintId);
+    if (!sp) return null;
+    var correct = Math.max(0, Math.floor(num(correctCount, 0)));
+    var attempted = Math.max(0, Math.floor(num(attemptedCount, 0)));
+    var elapsed = Math.max(0, num(elapsedSec, 0));
+    var accuracy = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
+    var perMin = elapsed > 0 ? Math.round((correct / elapsed) * 60) : 0;
+    var rating = 'bronze';
+    if (sp.kind === 'time') {
+      if (correct >= 25 && accuracy >= 85) rating = 'gold';
+      else if (correct >= 15 && accuracy >= 70) rating = 'silver';
+    } else {
+      if (accuracy >= 95) rating = 'gold';
+      else if (accuracy >= 80) rating = 'silver';
+    }
+    return {
+      sprintId: sprintId,
+      label: sp.label,
+      correct: correct,
+      attempted: attempted,
+      accuracy: accuracy,
+      perMinute: perMin,
+      rating: rating
+    };
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Printable worksheet                                                 */
+  /* ------------------------------------------------------------------ */
+
+  // config: { ops:[...], level, count }. Returns { problems, answerKeyLines }.
+  function buildWorksheet(config, rand) {
+    var cfg = config || {};
+    var ops = (Array.isArray(cfg.ops) ? cfg.ops : []).filter(function (o) { return !!opMeta(o); });
+    if (!ops.length) ops = OPS.slice();
+    var level = clampInt(cfg.level, MIN_LEVEL, MAX_LEVEL, 1);
+    var count = clampInt(cfg.count, 1, 100, 10);
+    var problems = [];
+    for (var i = 0; i < count; i++) {
+      problems.push(genProblem(ops[i % ops.length], level, rand));
+    }
+    var keyLines = problems.map(function (p, i) {
+      return (i + 1) + '. ' + p.a + ' ' + opMeta(p.op).symbol + ' ' + p.b + ' = ' + p.answer;
+    });
+    return { problems: problems, answerKeyLines: keyLines };
+  }
+
+  // Render worksheet problems as numbered lines ("1. 12 + 7 = ___").
+  function worksheetProblemLines(problems) {
+    var list = Array.isArray(problems) ? problems : [];
+    return list.map(function (p, i) {
+      return (i + 1) + '. ' + p.a + ' ' + opMeta(p.op).symbol + ' ' + p.b + ' = _____';
+    });
+  }
+
+  // Check: every answer-key line's answer must equal the matching problem's answer.
+  function worksheetKeyMatches(problems, keyLines) {
+    var list = Array.isArray(problems) ? problems : [];
+    var keys = Array.isArray(keyLines) ? keyLines : [];
+    if (!list.length || keys.length !== list.length) return false;
+    for (var i = 0; i < list.length; i++) {
+      var tail = '= ' + list[i].answer;
+      if (keys[i].indexOf(tail) === -1) return false;
+    }
+    return true;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Session summary                                                     */
+  /* ------------------------------------------------------------------ */
+
+  function sessionSummary(state) {
+    var s = state || initialState();
+    var acc = s.totalAttempts > 0 ? Math.round((s.totalCorrect / s.totalAttempts) * 100) : 0;
+    return {
+      totalAttempts: s.totalAttempts,
+      totalCorrect: s.totalCorrect,
+      accuracy: acc,
+      bestStreak: s.sessionBestStreak,
+      xp: s.xp,
+      mistakesBanked: s.mistakeBank.length,
+      board: masteryBoard(s)
+    };
+  }
+
+  return {
+    OPS: OPS,
+    OP_META: OP_META,
+    SPRINTS: SPRINTS,
+    MIN_LEVEL: MIN_LEVEL,
+    MAX_LEVEL: MAX_LEVEL,
+    LEVEL_UP_STREAK: LEVEL_UP_STREAK,
+    LEVEL_DOWN_STREAK: LEVEL_DOWN_STREAK,
+    opMeta: opMeta,
+    genProblem: genProblem,
+    genMixedProblem: genMixedProblem,
+    initialState: initialState,
+    recordAttempt: recordAttempt,
+    bankMistake: bankMistake,
+    clearMistake: clearMistake,
+    reDrillQueue: reDrillQueue,
+    masteryForOp: masteryForOp,
+    masteryBoard: masteryBoard,
+    masteryStars: masteryStars,
+    getSprint: getSprint,
+    scoreSprint: scoreSprint,
+    buildWorksheet: buildWorksheet,
+    worksheetProblemLines: worksheetProblemLines,
+    worksheetKeyMatches: worksheetKeyMatches,
+    sessionSummary: sessionSummary
+  };
+})();
+
+</script>
+
+<!-- UI wiring (DOM script — not part of the pure lib) -->
+<script>
+(function () {
+  'use strict';
+  var MD = MathDash;
+  var state = MD.initialState();
+  var enabledOps = ['add', 'sub', 'mul', 'div'];
+  var current = null;      // current practice problem
+  var redrillQueue = [];   // active re-drill list
+  var redrillMode = false;
+  var sprint = null;       // { def, correct, attempted, timerId, deadline, problem, streak }
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]); }); }
+
+  /* ---------- mode tabs ---------- */
+  var panels = { mdModePractice: 'mdPanelPractice', mdModeSprint: 'mdPanelSprint', mdModeMistakes: 'mdPanelMistakes', mdModeWorksheet: 'mdPanelWorksheet' };
+  Object.keys(panels).forEach(function (tabId) {
+    $(tabId).addEventListener('click', function () {
+      Object.keys(panels).forEach(function (t) { $(t).classList.remove('active'); $(panels[t]).classList.add('hidden'); });
+      $(tabId).classList.add('active');
+      $(panels[tabId]).classList.remove('hidden');
+      if (tabId === 'mdModeMistakes') renderMistakes();
+    });
+  });
+
+  /* ---------- op chips ---------- */
+  document.querySelectorAll('#mdOps .op-chip').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      chip.classList.toggle('active');
+      enabledOps = Array.prototype.filter.call(document.querySelectorAll('#mdOps .op-chip.active'), function (c) { return true; })
+        .map(function (c) { return c.getAttribute('data-op'); });
+      if (!enabledOps.length) { chip.classList.add('active'); enabledOps = [chip.getAttribute('data-op')]; }
+      nextPractice();
+    });
+  });
+
+  /* ---------- practice arena ---------- */
+  function levelMap() {
+    var m = {};
+    enabledOps.forEach(function (op) { m[op] = state.byOp[op].level; });
+    return m;
+  }
+
+  function nextPractice() {
+    if (redrillMode && redrillQueue.length) {
+      var m = redrillQueue[0];
+      current = { op: m.op, a: m.a, b: m.b, answer: m.answer, text: m.text };
+    } else {
+      redrillMode = false;
+      current = MD.genMixedProblem(enabledOps, levelMap());
+    }
+    if (!current) { $('mdProblemText').textContent = 'Pick an operation!'; return; }
+    $('mdProblemText').textContent = current.text;
+    $('mdAnswerInput').value = '';
+    $('mdFeedback').textContent = '';
+    updateLevelBadge();
+  }
+
+  function updateLevelBadge() {
+    var meta = MD.opMeta(current.op);
+    $('mdLevelBadge').textContent = 'Level ' + state.byOp[current.op].level + ' · ' + meta.symbol + ' ' + meta.label;
+  }
+
+  function popFeedback(msg, good) {
+    var f = $('mdFeedback');
+    f.textContent = msg;
+    f.style.color = good ? '#059669' : '#DC2626';
+    f.classList.remove('feedback-pop');
+    void f.offsetWidth;
+    f.classList.add('feedback-pop');
+  }
+
+  function confetti() {
+    var box = $('mdConfetti');
+    var colors = ['#F59E0B', '#10B981', '#F472B6', '#60A5FA', '#A78BFA'];
+    for (var i = 0; i < 14; i++) {
+      var d = document.createElement('div');
+      d.className = 'confetti-dot';
+      d.style.left = (20 + Math.random() * 60) + '%';
+      d.style.top = '10%';
+      d.style.background = colors[i % colors.length];
+      d.style.animationDelay = (Math.random() * 0.3) + 's';
+      box.appendChild(d);
+      setTimeout((function (el) { return function () { el.remove(); }; })(d), 1600);
+    }
+  }
+
+  function checkPractice() {
+    if (!current) return;
+    var raw = $('mdAnswerInput').value.trim();
+    if (raw === '' || !/^-?\d+$/.test(raw)) { popFeedback('Type a number first! ✏️', false); return; }
+    var good = parseInt(raw, 10) === current.answer;
+    var res = MD.recordAttempt(state, current, good ? 'correct' : 'wrong', redrillMode ? 'redrill' : 'drill');
+    if (good) {
+      var msgs = ['Awesome! 🎉', 'Nailed it! ⭐', 'Superstar! 🌟', 'Brilliant! 💪'];
+      var msg = msgs[Math.floor(Math.random() * msgs.length)];
+      if (res.leveledUp) msg += '  LEVEL UP! Now Level ' + res.levelAfter + ' 🚀';
+      popFeedback(msg, true);
+      if (res.sessionStreak > 0 && res.sessionStreak % 5 === 0) confetti();
+      if (redrillMode) { redrillQueue.shift(); if (!redrillQueue.length) { redrillMode = false; popFeedback('Mistake bank cleared! 🏆', true); } }
+    } else {
+      popFeedback('Oops! The answer was ' + current.answer + '. It\'s in your mistake bank 🧠', false);
+    }
+    $('mdStreak').innerHTML = (res.sessionStreak >= 3 ? '<span class="streak-flame">🔥</span> ' : '') + 'Streak ' + res.sessionStreak;
+    $('mdScore').textContent = res.xp + ' XP';
+    updateLevelBadge();
+    renderMastery();
+    renderSession();
+    setTimeout(nextPractice, good ? 650 : 1400);
+  }
+
+  $('mdCheckBtn').addEventListener('click', checkPractice);
+  $('mdAnswerInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') checkPractice(); });
+  $('mdSkipBtn').addEventListener('click', function () { redrillMode = false; nextPractice(); });
+  document.querySelectorAll('#mdKeypad .key-btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var inp = $('mdAnswerInput');
+      var k = b.getAttribute('data-k');
+      if (k === 'C') inp.value = inp.value.slice(0, -1);
+      else if (k === '-' ) inp.value = inp.value.charAt(0) === '-' ? inp.value.slice(1) : '-' + inp.value;
+      else if (inp.value.replace('-', '').length < 6) inp.value += k;
+      inp.focus();
+    });
+  });
+
+  /* ---------- mastery dashboard ---------- */
+  function renderMastery() {
+    var board = MD.masteryBoard(state);
+    $('mdMasteryBoard').innerHTML = board.map(function (row) {
+      var stars = '★'.repeat(MD.masteryStars(row.mastery)) + '☆'.repeat(3 - MD.masteryStars(row.mastery));
+      var dot = row.mastery >= 60 ? '#10B981' : (row.mastery >= 30 ? '#F59E0B' : '#D6C79A');
+      return '<div>' +
+        '<div class="flex justify-between items-center text-sm font-extrabold mb-1">' +
+        '<span>' + esc(row.label) + ' <span style="color:#92400E">Lv ' + row.level + '</span></span>' +
+        '<span style="color:' + dot + '">' + stars + ' ' + row.mastery + '%</span></div>' +
+        '<div class="mast-bar"><div class="mast-fill" style="width:' + row.mastery + '%"></div></div></div>';
+    }).join('');
+  }
+
+  function renderSession() {
+    var s = MD.sessionSummary(state);
+    $('mdSessionStats').innerHTML =
+      '✅ ' + s.totalCorrect + '/' + s.totalAttempts + ' correct (' + s.accuracy + '%)<br>' +
+      '🔥 Best streak: ' + s.bestStreak + ' &nbsp;·&nbsp; 🧠 Mistakes banked: ' + s.mistakesBanked;
+  }
+
+  $('mdResetBtn').addEventListener('click', function () {
+    state = MD.initialState();
+    redrillMode = false; redrillQueue = [];
+    $('mdStreak').textContent = 'Streak 0';
+    $('mdScore').textContent = '0 XP';
+    renderMastery(); renderSession(); renderMistakes(); nextPractice();
+  });
+
+  /* ---------- sprint ---------- */
+  $('mdSprintStart').addEventListener('click', function () {
+    var def = MD.getSprint($('mdSprintSelect').value);
+    if (sprint && sprint.timerId) clearInterval(sprint.timerId);
+    sprint = { def: def, correct: 0, attempted: 0, problem: null, streak: 0, timerId: null, deadline: 0, startTs: Date.now() };
+    $('mdSprintResult').textContent = '';
+    if (def.kind === 'time') {
+      sprint.deadline = Date.now() + def.limit * 1000;
+      sprint.timerId = setInterval(tickSprint, 250);
+      tickSprint();
+    } else {
+      $('mdSprintTime').textContent = '0/' + def.problems;
+    }
+    nextSprintProblem();
+    $('mdSprintAnswer').value = '';
+    $('mdSprintAnswer').focus();
+  });
+
+  function tickSprint() {
+    var left = Math.max(0, Math.ceil((sprint.deadline - Date.now()) / 1000));
+    $('mdSprintTime').textContent = left + 's';
+    if (left <= 0) endSprint();
+  }
+
+  function nextSprintProblem() {
+    sprint.problem = MD.genMixedProblem(enabledOps, levelMap());
+    $('mdSprintProblem').textContent = sprint.problem.text;
+    $('mdSprintAnswer').value = '';
+    $('mdSprintAnswer').focus();
+  }
+
+  function sprintAnswer() {
+    if (!sprint || !sprint.problem) return;
+    var raw = $('mdSprintAnswer').value.trim();
+    if (raw === '' || !/^-?\d+$/.test(raw)) return;
+    var good = parseInt(raw, 10) === sprint.problem.answer;
+    sprint.attempted++;
+    if (good) {
+      sprint.correct++;
+      sprint.streak++;
+      MD.recordAttempt(state, sprint.problem, 'correct', 'drill');
+    } else {
+      sprint.streak = 0;
+      MD.recordAttempt(state, sprint.problem, 'wrong', 'drill');
+    }
+    $('mdSprintStreak').innerHTML = (sprint.streak >= 3 ? '<span class="streak-flame">🔥</span> ' : '') + 'Streak ' + sprint.streak;
+    renderMastery(); renderSession();
+    if (sprint.def.kind === 'count' && sprint.attempted >= sprint.def.problems) { endSprint(); return; }
+    nextSprintProblem();
+  }
+
+  function endSprint() {
+    if (sprint.timerId) clearInterval(sprint.timerId);
+    var elapsed = sprint.def.kind === 'time' ? sprint.def.limit : Math.max(1, Math.round((Date.now() - sprint.startTs) / 1000));
+    var r = MD.scoreSprint(sprint.def.id, sprint.correct, sprint.attempted, elapsed);
+    var medal = r.rating === 'gold' ? '🥇' : (r.rating === 'silver' ? '🥈' : '🥉');
+    $('mdSprintResult').innerHTML = medal + ' <span style="text-transform:capitalize">' + r.rating + '</span>! ' +
+      r.correct + '/' + r.attempted + ' correct (' + r.accuracy + '%) · ' + r.perMinute + '/min';
+    $('mdSprintProblem').textContent = 'Done!';
+    $('mdSprintTime').textContent = '—';
+    sprint = null;
+  }
+
+  $('mdSprintGo').addEventListener('click', sprintAnswer);
+  $('mdSprintAnswer').addEventListener('keydown', function (e) { if (e.key === 'Enter') sprintAnswer(); });
+
+  /* ---------- mistake bank ---------- */
+  function renderMistakes() {
+    var q = MD.reDrillQueue(state);
+    $('mdMistakeCount').textContent = q.length + (q.length === 1 ? ' mistake banked' : ' mistakes banked');
+    $('mdMistakeList').innerHTML = q.length ? q.map(function (m) {
+      var meta = MD.opMeta(m.op);
+      return '<div class="mistake-row flex justify-between items-center font-bold text-sm">' +
+        '<span>' + m.a + ' ' + meta.symbol + ' ' + m.b + ' = <span style="color:#059669">' + m.answer + '</span></span>' +
+        '<span style="color:#991B1B">missed ×' + m.misses + '</span></div>';
+    }).join('') : '<p class="text-center font-bold" style="color:#92400E">No mistakes yet — keep drilling! 🎉</p>';
+  }
+
+  $('mdReDrillBtn').addEventListener('click', function () {
+    var q = MD.reDrillQueue(state);
+    if (!q.length) { renderMistakes(); return; }
+    redrillQueue = q.map(function (m) { return { op: m.op, a: m.a, b: m.b, answer: m.answer, text: m.text }; });
+    redrillMode = true;
+    Object.keys(panels).forEach(function (t) { $(t).classList.remove('active'); $(panels[t]).classList.add('hidden'); });
+    $('mdModePractice').classList.add('active');
+    $('mdPanelPractice').classList.remove('hidden');
+    popFeedback('Re-drill mode! Clear ' + redrillQueue.length + ' mistakes 🧠', true);
+    nextPractice();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ---------- worksheet ---------- */
+  var currentSheet = null;
+  $('mdBuildSheetBtn').addEventListener('click', function () {
+    var cfg = {
+      ops: enabledOps,
+      level: parseInt($('mdWorksheetLevel').value, 10),
+      count: parseInt($('mdWorksheetCount').value, 10)
+    };
+    currentSheet = MD.buildWorksheet(cfg);
+    var lines = MD.worksheetProblemLines(currentSheet.problems);
+    var name = ($('mdAvatarName').value || 'Superstar').trim() || 'Superstar';
+    var half = Math.ceil(lines.length / 2);
+    function col(list) { return '<ol style="list-style:decimal inside; line-height:2.1; font-size:15px;">' + list.map(function (l) { return '<li>' + esc(l.replace(/^\d+\.\s*/, '')) + '</li>'; }).join('') + '</ol>'; }
+    $('mdWorksheetPreview').innerHTML =
+      '<div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:8px; color:#111;">' +
+      '<span>MathDash Worksheet — ' + esc(name) + '</span><span>Date: ______</span></div>' +
+      '<div style="display:grid; grid-template-columns:1fr 1fr; gap:0 24px;">' +
+      '<div>' + col(lines.slice(0, half)) + '</div><div>' + col(lines.slice(half)) + '</div></div>';
+  });
+
+  $('mdPrintBtn').addEventListener('click', function () {
+    if (!currentSheet) $('mdBuildSheetBtn').click();
+    var cfg = currentSheet;
+    var name = ($('mdAvatarName').value || 'Superstar').trim() || 'Superstar';
+    var lines = MD.worksheetProblemLines(cfg.problems);
+    function col(list) { return '<ol style="list-style:decimal inside; line-height:2.1; font-size:15px;">' + list.map(function (l) { return '<li>' + esc(l.replace(/^\d+\.\s*/, '')) + '</li>'; }).join('') + '</ol>'; }
+    var half = Math.ceil(lines.length / 2);
+    $('mdPrintSheet').innerHTML =
+      '<h1 style="font-size:22px; margin-bottom:4px;">MathDash Practice Worksheet</h1>' +
+      '<p style="margin-bottom:12px;">Name: ' + esc(name) + ' &nbsp;&nbsp; Date: __________ &nbsp;&nbsp; Score: ______ / ' + lines.length + '</p>' +
+      '<div style="display:grid; grid-template-columns:1fr 1fr; gap:0 24px;">' +
+      '<div>' + col(lines.slice(0, half)) + '</div><div>' + col(lines.slice(half)) + '</div></div>';
+    $('mdPrintKey').innerHTML =
+      '<h1 style="font-size:22px; margin-bottom:12px;">Answer Key</h1>' +
+      '<ol style="list-style:decimal inside; line-height:2; font-size:15px; columns:2;">' +
+      cfg.answerKeyLines.map(function (l) { return '<li>' + esc(l.replace(/^\d+\.\s*/, '')) + '</li>'; }).join('') + '</ol>';
+    window.print();
+  });
+
+  /* ---------- init ---------- */
+  renderMastery();
+  renderSession();
+  nextPractice();
+})();
+</script>
+</body>
+</html>
